@@ -1,0 +1,18 @@
+[Unit]
+Description=Clash
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+#ExecStart=/home/ubuntu/clash/clashpremium-linux-armv8 -d /home/ubuntu/clash
+ExecStart=bash -c "cd /home/ubuntu/clash && ./clashpremium-linux-armv8 -d . > /home/ubuntu/clash/clash.log"
+Restart=on-failure
+RestartSec=5s
+WorkingDirectory=/home/ubuntu/clash
+#StandardOutput=journal+console
+#StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target
