@@ -17,7 +17,7 @@ elif [ "$ARCH" == "aarch64" ]; then
 fi
 
 # 拷贝文件到/opt/clash目录
-cp ${WORK_PATH}/${clash_name} ${WORK_PATH}/Country.mmdb ${OPT_PATH}/
+cp ${WORK_PATH}/${clash_name} ${WORK_PATH}/Country.mmdb ${WORK_PATH}/cache.db ${OPT_PATH}/
 # 设置网络代理
 if [[ $XDG_CURRENT_DESKTOP == *"GNOME"* ]]; then
     echo "Gnome 桌面环境，正在设置系统代理..."
@@ -41,9 +41,20 @@ else
     echo "export all_proxy=socks5://127.0.0.1:7891" | tee -a /etc/environment
 fi
 
-# 修改clash.service文件中的User和Group为当前用户，并且修改ExecStart为正确的路径
-sed -i -e 's/User=ubuntu/User=${USER}/' -e 's/Group=ubuntu/Group=${USER}/' ${WORK_PATH}/clash.service
-sed -i -e 's|ExecStart=.*|ExecStart=bash -c "cd ${OPT_PATH} && ./${clash_name} -d . > ${OPT_PATH}/clash.log"|' ${WORK_PATH}/clash.service
+sudo tee ${WORK_PATH}/clash.service << EOF
+[Unit]
+Description=Clash Daemon
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=bash -c "cd ${OPT_PATH} && ./${clash_name} -d . > ${OPT_PATH}/clash.log"
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
 cp ${WORK_PATH}/clash.service /etc/systemd/system/clash.service
 systemctl daemon-reload
 systemctl enable clash.service

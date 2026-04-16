@@ -1,16 +1,12 @@
 [Unit]
-Description=Clash
+Description=Clash Daemon
 After=network.target
 
 [Service]
 Type=simple
-User=ubuntu
-Group=ubuntu
-ExecStart=bash -c "cd /opt/clash && ./clashpremium-linux-armv8 -d . > /home/ubuntu/clash/clash.log"
+ExecStart=bash -c "cd /opt/clash && ./clash-linux-amd64 -d . > /opt/clash/clash.log"
 Restart=always
-RestartSec=5s
-#StandardOutput=journal+console
-#StandardError=journal+console
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
