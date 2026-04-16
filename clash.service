@@ -6,11 +6,9 @@ After=network.target
 Type=simple
 User=ubuntu
 Group=ubuntu
-#ExecStart=/home/ubuntu/clash/clashpremium-linux-armv8 -d /home/ubuntu/clash
-ExecStart=bash -c "cd /home/ubuntu/clash && ./clashpremium-linux-armv8 -d . > /home/ubuntu/clash/clash.log"
-Restart=on-failure
+ExecStart=bash -c "cd /opt/clash && ./clashpremium-linux-armv8 -d . > /home/ubuntu/clash/clash.log"
+Restart=always
 RestartSec=5s
-WorkingDirectory=/home/ubuntu/clash
 #StandardOutput=journal+console
 #StandardError=journal+console
 
